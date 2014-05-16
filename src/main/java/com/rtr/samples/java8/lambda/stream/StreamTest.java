@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.function.IntConsumer;
+import java.util.stream.Collectors;
 
 public class StreamTest {
 	
@@ -14,8 +15,33 @@ public class StreamTest {
 			numbers.add(i);
 		}
 		
-		Averager avg = numbers.stream().parallel()
-				.collect(Averager::new, Averager::accept, Averager::combine);
+		//Sum the list
+		int sum = numbers.stream().reduce(0, (a,b) -> a+ b);
+		System.out.println(sum);
+
+		//Product of the list
+		int product = numbers.stream().reduce(1, (a,b) -> a * b);
+		System.out.println(product);
+
+		//add 2 to every element and compute the product.
+		int result = numbers.stream().map((e) -> e + 2).reduce(1, (a,b) -> a * b);
+		System.out.println(result);
+
+		//collect all elements into a Set. 
+		//This performs a reduction that uses Set::add to add elements to a new HashSet (constructed by HashSet::new)
+		Set<Integer> set = numbers.stream().collect(HashSet::new, Set::add, Set::addAll);
+		System.out.println(set);
+
+		//Add 2 to every element and collect into a List.
+		List<String> mapped = numbers.stream().map((e) -> String.valueOf(e+2)).collect(Collectors.toList());
+		System.out.println(mapped);
+
+		//Collect all odd numbers into a List;
+		List<Integer> odd = numbers.stream().filter((e) -> e % 2 != 0 ).collect(Collectors.toList());
+		System.out.println(odd);
+		
+		//Compute an average of all elements in the stream using a Parallel Stream
+		Averager avg = numbers.stream().parallel().collect(Averager::new, Averager::accept, Averager::combine);
 		System.out.println(avg.average());
 	}
 	
@@ -42,5 +68,5 @@ public class StreamTest {
 	        total += other.total;
 	        count += other.count;
 	    }
-}
+	}
 }

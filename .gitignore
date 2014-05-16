@@ -8,7 +8,7 @@
 *.war
 *.ear
 target/
-settings/
+.settings/
 .classpath
 .project
 
